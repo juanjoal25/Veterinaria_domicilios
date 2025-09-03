@@ -1,0 +1,724 @@
+/* Importa la fuente moderna sans-serif */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+#root {
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+:root {
+  /* Paleta de colores consistente */
+  --color-base: #F5EDE3;
+  --color-primary: #ED7959;
+  --color-secondary: #FFD8C2;
+  --color-text: #2F2F2F;
+  --color-gray-text: #6b7280;
+  --color-white: #FFFFFF;
+  --color-dark: #1f2937;
+  --color-light-gray: #f9fafb;
+  --color-border: #e5e7eb;
+}
+
+/* Estilos generales y tipografía */
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-base);
+  /*background: linear-gradient(360deg, var(--color-primary) 60%, var(--color-base) 100%);*/
+}
+
+/* Contenedor principal de la aplicación */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem 2rem;
+}
+
+/* Títulos de sección */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3.5rem;
+  color: var(--color-text);
+}
+
+/* Botones con estilos consistentes */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: 0.85rem 2.25rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  background-color: #d16e4f;
+}
+
+.btn-secondary {
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-secondary:hover {
+  transform: scale(1.05);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+/* Colores de texto y elementos de diseño */
+.primary-text {
+  color: var(--color-primary);
+}
+
+/* Estilos del encabezado */
+.main-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4.5rem;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-image {
+  height: 40px;
+  width: auto;
+}
+
+.desktop-nav {
+  display: none;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.desktop-nav a {
+  color: var(--color-text);
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.3s ease;
+  text-decoration: none;
+  font-size: 1.05rem;
+}
+
+.desktop-nav a:hover {
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.mobile-menu-btn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+.mobile-menu {
+  background-color: var(--color-white);
+  border-top: 1px solid #e5e7eb;
+  padding: 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.mobile-menu a,
+.mobile-menu button {
+  width: 100%;
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.mobile-menu a {
+  color: var(--color-text);
+}
+
+.mobile-menu a:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+}
+
+
+/* Media queries para escritorio */
+@media (min-width: 768px) {
+  .desktop-nav {
+    display: flex;
+  }
+
+  .mobile-menu-btn,
+  .mobile-menu {
+    display: none;
+  }
+}
+
+
+/* Estilos de la sección Hero */
+.hero-section {
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+  background-color: var(--color-base);
+  text-align: center;
+}
+
+.hero-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .hero-container {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+@media (min-width: 768px) {
+  .hero-content {
+    width: 50%;
+  }
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  line-height: 1.1;
+}
+
+.hero-subtitle {
+  color: var(--color-gray-text);
+  margin-bottom: 2rem;
+  font-size: 1.15rem;
+}
+
+.hero-image-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  border-radius: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Estilos de la sección Servicios */
+.services-section {
+  padding: 6rem 0;
+  background-color: var(--color-white);
+}
+
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* 3 columnas fijas en desktop */
+  gap: 2rem;
+  justify-content: center;
+}
+
+/* Para móvil: 1 columna */
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.service-card {
+  background-color: var(--color-white);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 15px -3px rgba(0, 0, 0, 0.1), 0 3px 6px -2px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid var(--color-primary);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.15), 0 6px 12px -4px rgba(0, 0, 0, 0.1);
+}
+
+.service-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--color-primary);
+}
+
+.service-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.service-description {
+  color: var(--color-gray-text);
+  font-size: 1rem;
+}
+
+
+/* Estilos de la sección "Sobre Nosotros" */
+.about-us-section {
+  padding: 6rem 0;
+  background-color: var(--color-secondary);
+}
+
+.about-us-container {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 3.5rem;
+}
+
+@media (min-width: 768px) {
+  .about-us-container {
+    flex-direction: row;
+    gap: 4rem;
+  }
+}
+
+.about-us-content {
+  text-align: center;
+  max-width: 600px;
+}
+
+@media (min-width: 768px) {
+  .about-us-content {
+    text-align: left;
+    width: 50%;
+  }
+}
+
+.about-us-image-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.about-us-image {
+  width: 100%;
+  height: auto;
+  border-radius: 2rem;
+  box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.15), 0 6px 12px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos de la sección de Testimonios */
+.testimonials-section {
+  padding: 6rem 0;
+  background-color: var(--color-base);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* 3 columnas fijas en desktop */
+  gap: 2.5rem;
+  justify-content: center;
+}
+
+/* Para móvil: 1 columna */
+@media (max-width: 768px) {
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.testimonial-card {
+  background-color: var(--color-white);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 15px -3px rgba(0, 0, 0, 0.1), 0 3px 6px -2px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.15), 0 6px 12px -4px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.testimonial-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  background-color: var(--color-secondary);
+  border-radius: 9999px;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.testimonial-info {
+  line-height: 1.3;
+}
+
+.testimonial-name {
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+
+.testimonial-role {
+  font-size: 0.95rem;
+  color: var(--color-gray-text);
+}
+
+.testimonial-rating {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.star-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: #fcd34d;
+  color: #fcd34d;
+}
+
+.testimonial-text {
+  color: var(--color-text);
+  font-size: 1rem;
+  flex-grow: 1;
+}
+
+
+/* Estilos de la sección Newsletter */
+.newsletter-section {
+  padding: 6rem 0;
+  background-color: var(--color-secondary);
+  text-align: center;
+}
+
+.newsletter-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.newsletter-title {
+  font-size: 2.75rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.newsletter-subtitle {
+  color: var(--color-gray-text);
+  margin-bottom: 2.5rem;
+  font-size: 1.15rem;
+}
+
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .newsletter-form {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+.newsletter-input {
+  flex: 1;
+  padding: 0.9rem 1.75rem;
+  border-radius: 9999px;
+  border: 2px solid #d1d5db;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 1rem;
+  color: var(--color-text);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.newsletter-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.2);
+}
+
+
+/* Estilos del pie de página */
+.main-footer {
+  background-color: var(--color-dark);
+  color: var(--color-white);
+  padding: 3rem 0;
+  margin-top: auto;
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .footer-container {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+}
+
+.footer-copyright {
+  font-size: 0.95rem;
+  color: #a0a7b3;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.footer-links a {
+  color: #a0a7b3;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--color-white);
+}
+
+/* --- Nuevos estilos para LoginPage y RegisterPage --- */
+
+/* Contenedor principal para las páginas de autenticación */
+.auth-page-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+/* Tarjeta principal que contiene el formulario */
+.auth-card {
+  max-width: 28rem;
+  width: 100%;
+  background-color: var(--color-white);
+  border-radius: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 2.5rem;
+  text-align: center;
+  /* Añadido para asegurar que los elementos no se desborden horizontalmente */
+  box-sizing: border-box;
+}
+
+/* Sección de encabezado de la tarjeta */
+.auth-header {
+  margin-bottom: 2rem;
+}
+
+.auth-logo {
+  height: 3.5rem;
+  margin: 0 auto 1.5rem;
+}
+
+.auth-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  color: var(--color-gray-text);
+  font-size: 1rem;
+}
+
+/* Formulario */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Grupo de etiqueta e input */
+.form-group {
+  text-align: left;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.8rem 1.25rem;
+  border-radius: 1rem;
+  border: 2px solid var(--color-border);
+  background-color: var(--color-light-gray);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 1rem;
+  color: var(--color-text);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Asegura que el input se ajuste dentro de su contenedor */
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.2);
+}
+
+/* Mensaje de error */
+.error-message {
+  display: flex;
+  align-items: center;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.error-icon {
+  height: 1.1rem;
+  width: 1.1rem;
+  margin-right: 0.5rem;
+}
+
+/* Sección de enlaces al pie del formulario */
+.auth-footer {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.auth-link-text {
+  color: var(--color-gray-text);
+  font-size: 0.95rem;
+}
+
+.auth-link {
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: text-decoration 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.95rem;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.back-link {
+  font-size: 0.875rem;
+  color: var(--color-gray-text);
+  transition: color 0.3s ease;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.back-link:hover {
+  color: var(--color-text);
+}
+
+/* Ajustes específicos para los botones dentro de formularios */
+.w-full {
+  width: 100%;
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
