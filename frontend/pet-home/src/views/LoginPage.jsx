@@ -29,26 +29,39 @@ const LoginPage = () => {
         setError('');
         setLoading(true);
 
+        // Timeout de seguridad para evitar carga infinita
+        const timeoutId = setTimeout(() => {
+            console.log('Timeout alcanzado, reseteando loading...');
+            setLoading(false);
+            setError('Tiempo de espera agotado. Por favor intenta nuevamente.');
+        }, 10000); // 10 segundos
+
         // Validaciones básicas
         if (!formData.email.trim()) {
+            clearTimeout(timeoutId);
             setError('El email es requerido');
             setLoading(false);
             return;
         }
 
         if (!formData.password.trim()) {
+            clearTimeout(timeoutId);
             setError('La contraseña es requerida');
             setLoading(false);
             return;
         }
 
         try {
+            console.log('Iniciando proceso de login...');
             const result = await login(formData.email.trim(), formData.password);
+            console.log('Resultado del login:', result);
             
             if (result.success) {
+                console.log('Login exitoso, redirigiendo...');
                 // Redirigir al dashboard si el inicio de sesión es exitoso
                 navigate("/dashboard", { replace: true });
             } else {
+                console.log('Login falló:', result.error);
                 // Manejar errores específicos de Supabase
                 let errorMessage = 'Error al iniciar sesión. Verifica tus credenciales.';
                 
@@ -70,6 +83,8 @@ const LoginPage = () => {
             console.error('Error inesperado en login:', err);
             setError('Error inesperado. Por favor intenta nuevamente.');
         } finally {
+            console.log('Finalizando proceso de login, reseteando loading...');
+            clearTimeout(timeoutId);
             setLoading(false);
         }
     };

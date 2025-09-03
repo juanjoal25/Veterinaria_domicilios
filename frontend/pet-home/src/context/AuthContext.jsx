@@ -39,16 +39,36 @@ const AuthProvider = ({ children }) => {
     // Escuchar cambios de autenticación
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session);
+        console.log('=== AUTH STATE CHANGE ===');
+        console.log('Event:', event);
+        console.log('Session:', session);
+        console.log('User:', session?.user);
+        
         setSession(session);
         
         if (session?.user) {
-          await fetchUserProfile(session.user.id);
+          // Establecer un perfil mínimo inmediatamente para no bloquear la UI
+          const immediateUser = {
+            id: session.user.id,
+            name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'Usuario',
+            email: session.user.email,
+            phone: session.user.user_metadata?.phone || '',
+            role: 'client'
+          };
+          setUser(immediateUser);
+
+          // Cargar el perfil completo en segundo plano
+          console.log('Fetching user profile for:', session.user.id);
+          fetchUserProfile(session.user.id).catch((e) => {
+            console.error('Background fetchUserProfile error:', e);
+          });
         } else {
+          console.log('No session user, setting user to null');
           setUser(null);
         }
         
         setLoading(false);
+        console.log('=== END AUTH STATE CHANGE ===');
       }
     );
 
@@ -61,38 +81,81 @@ const AuthProvider = ({ children }) => {
   // Función para obtener el perfil completo del usuario
   const fetchUserProfile = async (userId) => {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select(`
-          id,
-          name,
-          email,
-          phone,
-          role_id,
-          roles(name)
-        `)
-        .eq('id', userId)
-        .single();
+      console.log('=== FETCH USER PROFILE ===');
+      console.log('User ID:', userId);
+      
+      // Intentar obtener datos de la tabla users (opcional)
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select(`
+            id,
+            name,
+            email,
+            phone,
+            role_id
+          `)
+          .eq('id', userId)
+          .single();
 
-      if (error) {
-        console.error('Error obteniendo perfil:', error.message);
-        return;
+        console.log('Query result:', { data, error });
+
+        if (!error && data) {
+          console.log('User data found in table:', data);
+          
+          // Determinar el rol basado en role_id
+          let role = 'client';
+          if (data.role_id === 1) {
+            role = 'admin';
+          } else if (data.role_id === 2) {
+            role = 'client';
+          }
+
+          // Estructura el usuario con los datos de la tabla
+          const userProfile = {
+            id: data.id,
+            name: data.name || data.email?.split('@')[0] || 'Usuario',
+            email: data.email,
+            phone: data.phone || '',
+            role: role
+          };
+          
+          console.log('Setting user profile (from table):', userProfile);
+          setUser(userProfile);
+          console.log('=== END FETCH USER PROFILE ===');
+          return;
+        }
+      } catch (tableError) {
+        console.log('Table query failed, using auth data only:', tableError.message);
       }
 
-      if (data) {
-        // Estructura el usuario con el rol
-        const userProfile = {
-          id: data.id,
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          role: data.roles?.name || 'client'
-        };
-        
-        setUser(userProfile);
-      }
+      // Si no hay datos en la tabla o hay error, usar solo datos de auth
+      console.log('Using auth data only...');
+      const userProfile = {
+        id: userId,
+        name: 'Usuario', // Nombre por defecto
+        email: 'usuario@example.com', // Email por defecto
+        phone: '',
+        role: 'client'
+      };
+      
+      console.log('Setting user profile (auth only):', userProfile);
+      setUser(userProfile);
+      console.log('=== END FETCH USER PROFILE ===');
+      
     } catch (error) {
       console.error('Error en fetchUserProfile:', error);
+      
+      // Fallback final: usuario básico
+      const userProfile = {
+        id: userId,
+        name: 'Usuario',
+        email: 'usuario@example.com',
+        phone: '',
+        role: 'client'
+      };
+      console.log('Setting user profile (final fallback):', userProfile);
+      setUser(userProfile);
     }
   };
 
@@ -101,19 +164,33 @@ const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       
+      console.log('=== INICIO LOGIN ===');
+      console.log('Email:', email);
+      console.log('Password length:', password.length);
+      console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+      console.log('Supabase Key exists:', !!import.meta.env.VITE_SUPABASE_ANON_KEY);
+      
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: email.trim(),
+        password: password,
       });
 
+      console.log('Respuesta de Supabase:', { data, error });
+
       if (error) {
+        console.error('Error de autenticación:', error);
+        console.error('Error code:', error.status);
+        console.error('Error message:', error.message);
         return { success: false, error: error.message };
       }
 
+      console.log('Login exitoso:', data);
+      console.log('=== FIN LOGIN ===');
       // El usuario se establecerá automáticamente por el listener onAuthStateChange
       return { success: true, data };
     } catch (error) {
       console.error('Error en login:', error);
+      console.error('Error stack:', error.stack);
       return { success: false, error: 'Error inesperado durante el login' };
     } finally {
       setLoading(false);
@@ -143,16 +220,7 @@ const AuthProvider = ({ children }) => {
 
       // Si el registro de auth fue exitoso, crear el perfil en la tabla users
       if (authData.user) {
-        // Obtener el role_id para 'client' (asumiendo que existe)
-        const { data: roleData } = await supabase
-          .from('roles')
-          .select('id')
-          .eq('name', 'client')
-          .single();
-
-        const roleId = roleData?.id || 2; // Fallback al ID 2 si no encuentra el rol
-
-        // Crear el registro en la tabla users
+        // Crear el registro en la tabla users con la estructura actual
         const { error: profileError } = await supabase
           .from('users')
           .insert([
@@ -161,7 +229,7 @@ const AuthProvider = ({ children }) => {
               name: userData.name,
               email: userData.email,
               phone: userData.phone,
-              role_id: roleId,
+              role_id: 2, // Por defecto asignamos rol de cliente (ID 2)
             }
           ]);
 
@@ -200,7 +268,15 @@ const AuthProvider = ({ children }) => {
 
   // Función para verificar si el usuario está autenticado
   const isAuthenticated = () => {
-    return !!session && !!user;
+    const authenticated = !!session && !!user;
+    console.log('isAuthenticated check:', {
+      session: !!session,
+      user: !!user,
+      sessionData: session,
+      userData: user,
+      result: authenticated
+    });
+    return authenticated;
   };
 
   // Función para verificar si el usuario es admin
@@ -213,6 +289,39 @@ const AuthProvider = ({ children }) => {
     return hasRole('client');
   };
 
+  // Función para verificar si un usuario existe en Supabase Auth
+  const checkUserInAuth = async (email) => {
+    try {
+      // Intentar hacer login para verificar si el usuario existe en Auth
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password: 'dummy_password_to_check_existence'
+      });
+      
+      // Si no hay error de "invalid credentials", el usuario existe
+      return !error || !error.message.includes('Invalid login credentials');
+    } catch (error) {
+      return false;
+    }
+  };
+
+  // Función para probar la conexión con Supabase
+  const testSupabaseConnection = async () => {
+    try {
+      console.log('=== PROBANDO CONEXIÓN SUPABASE ===');
+      console.log('URL:', import.meta.env.VITE_SUPABASE_URL);
+      console.log('Key exists:', !!import.meta.env.VITE_SUPABASE_ANON_KEY);
+      
+      const { data, error } = await supabase.auth.getSession();
+      console.log('Session test:', { data, error });
+      
+      return { success: !error, error };
+    } catch (error) {
+      console.error('Error testing connection:', error);
+      return { success: false, error };
+    }
+  };
+
   const value = {
     user,
     session,
@@ -223,7 +332,9 @@ const AuthProvider = ({ children }) => {
     hasRole,
     isAuthenticated,
     isAdmin,
-    isClient
+    isClient,
+    checkUserInAuth,
+    testSupabaseConnection
   };
 
   return (
