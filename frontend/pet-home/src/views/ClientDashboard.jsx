@@ -27,6 +27,8 @@ const ClientDashboard = () => {
     navigate("/");
   };
 
+
+
   // Cargar mascotas del usuario
   const loadPets = async () => {
     try {
@@ -87,7 +89,7 @@ const ClientDashboard = () => {
         console.error('Error cargando exámenes:', error);
         return;
       }
-      
+
       setExams(data || []);
     } catch (error) {
       console.error('Error en loadExams:', error);
@@ -280,10 +282,10 @@ const ClientDashboard = () => {
           <label className="form-label">
             Seleccionar Mascota *
           </label>
-          <select 
+          <select
             required
             value={formData.pet_id}
-            onChange={(e) => setFormData({...formData, pet_id: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, pet_id: e.target.value })}
             className="form-input"
           >
             <option value="">Selecciona una mascota</option>
@@ -313,7 +315,7 @@ const ClientDashboard = () => {
             ))}
           </select>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Fecha y Hora *
@@ -340,16 +342,16 @@ const ClientDashboard = () => {
             placeholder="Describe brevemente el motivo de la consulta..."
           />
         </div>
-        
+
         <div className="form-buttons">
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="form-btn form-btn-secondary"
           >
             Cancelar
           </button>
-          <button 
+          <button
             type="submit"
             disabled={loading}
             className="form-btn form-btn-primary"
@@ -447,25 +449,25 @@ const ClientDashboard = () => {
           <label className="form-label">
             Nombre de la Mascota *
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             required
             value={formData.name}
-            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="form-input"
             placeholder="Ej: Max, Luna, etc."
           />
         </div>
-        
+
         <div className="form-row">
           <div className="form-group">
             <label className="form-label">
               Especie *
             </label>
-            <select 
+            <select
               required
               value={formData.species}
-              onChange={(e) => setFormData({...formData, species: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, species: e.target.value })}
               className="form-input"
             >
               <option>Perro</option>
@@ -475,14 +477,14 @@ const ClientDashboard = () => {
               <option>Otro</option>
             </select>
           </div>
-          
+
           <div className="form-group">
             <label className="form-label">
               Género
             </label>
-            <select 
+            <select
               value={formData.gender}
-              onChange={(e) => setFormData({...formData, gender: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
               className="form-input"
             >
               <option>Macho</option>
@@ -490,20 +492,20 @@ const ClientDashboard = () => {
             </select>
           </div>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Raza
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={formData.breed}
-            onChange={(e) => setFormData({...formData, breed: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, breed: e.target.value })}
             className="form-input"
             placeholder="Ej: Pastor Alemán, Persa, etc."
           />
         </div>
-        
+
         <div className="form-row">
           <div className="form-group">
             <label className="form-label">
@@ -516,13 +518,13 @@ const ClientDashboard = () => {
               className="form-input"
             />
           </div>
-          
+
           <div className="form-group">
             <label className="form-label">
               Peso (kg)
             </label>
-            <input 
-              type="number" 
+            <input
+              type="number"
               min="0"
               step="0.1"
               value={formData.weight_kg}
@@ -532,7 +534,7 @@ const ClientDashboard = () => {
             />
           </div>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Sexo
@@ -547,7 +549,7 @@ const ClientDashboard = () => {
             <option>Hembra</option>
           </select>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Notas
@@ -560,16 +562,16 @@ const ClientDashboard = () => {
             placeholder="Alergias, medicamentos, condiciones especiales..."
           />
         </div>
-        
+
         <div className="form-buttons">
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="form-btn form-btn-secondary"
           >
             Cancelar
           </button>
-          <button 
+          <button
             type="submit"
             disabled={loading}
             className="form-btn form-btn-primary"
@@ -583,13 +585,13 @@ const ClientDashboard = () => {
 
   const Modal = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null;
-    
+
     return (
       <div className="modal-overlay">
         <div className="modal-container">
           <div className="modal-header">
             <h2 className="modal-title">{title}</h2>
-            <button 
+            <button
               onClick={onClose}
               className="modal-close-btn"
             >
@@ -1281,7 +1283,7 @@ const ClientDashboard = () => {
         onClose={() => setShowAppointmentModal(false)}
         title="Agendar Nueva Cita"
       >
-        <AppointmentForm 
+        <AppointmentForm
           pets={pets}
           onClose={() => setShowAppointmentModal(false)}
           onSuccess={(message) => {
@@ -1330,9 +1332,9 @@ const ClientDashboard = () => {
               ))}
             </div>
           )}
-          
+
           <div className="flex justify-end pt-4">
-            <button 
+            <button
               onClick={() => setShowExamModal(false)}
               className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200"
             >
@@ -1347,7 +1349,7 @@ const ClientDashboard = () => {
         onClose={() => setShowPetModal(false)}
         title="Registrar Nueva Mascota"
       >
-        <PetForm 
+        <PetForm
           onClose={() => setShowPetModal(false)}
           onSuccess={(message) => {
             showMessage('success', message);
@@ -1400,7 +1402,7 @@ const ClientDashboard = () => {
               <div className="text-6xl mb-4">🐕</div>
               <h3 className="text-lg font-semibold text-gray-700 mb-2">No tienes mascotas registradas</h3>
               <p className="text-gray-500 mb-4">Registra tu primera mascota para comenzar a usar el sistema.</p>
-              <button 
+              <button
                 onClick={() => {
                   setShowHistoryModal(false);
                   setShowPetModal(true);
@@ -1474,9 +1476,9 @@ const ClientDashboard = () => {
               ))}
             </div>
           )}
-          
+
           <div className="flex justify-end pt-4">
-            <button 
+            <button
               onClick={() => setShowHistoryModal(false)}
               className="bg-purple-500 text-white px-6 py-2 rounded-lg hover:bg-purple-600 transition-colors duration-200"
             >
@@ -1496,54 +1498,54 @@ const ClientDashboard = () => {
             <label className="form-label">
               Nombre Completo
             </label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               defaultValue={user?.name}
               className="form-input"
             />
           </div>
-          
+
           <div className="form-group">
             <label className="form-label">
               Email
             </label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               defaultValue={user?.email}
               className="form-input"
             />
           </div>
-          
+
           <div className="form-group">
             <label className="form-label">
               Teléfono
             </label>
-            <input 
-              type="tel" 
+            <input
+              type="tel"
               defaultValue={user?.phone}
               className="form-input"
             />
           </div>
-          
+
           <div className="form-group">
             <label className="form-label">
               Dirección
             </label>
-            <textarea 
+            <textarea
               className="form-input form-textarea"
               rows="3"
               placeholder="Ingresa tu dirección completa..."
             />
           </div>
-          
+
           <div className="form-buttons">
-            <button 
+            <button
               onClick={() => setShowProfileModal(false)}
               className="form-btn form-btn-secondary"
             >
               Cancelar
             </button>
-            <button 
+            <button
               onClick={() => setShowProfileModal(false)}
               className="form-btn form-btn-primary"
             >

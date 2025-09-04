@@ -1,4 +1,4 @@
-# README.md – PetHome (MVP)
+# PetHome v1.0
 
 ## 📖 Descripción
 
