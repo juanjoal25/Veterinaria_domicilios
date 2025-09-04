@@ -1,12 +1,92 @@
-# React + Vite
+# PetHome Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plataforma web para servicios veterinarios a domicilio construida con React + Vite y Supabase.
 
-Currently, two official plugins are available:
+## Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Autenticación completa con Supabase Auth
+- Protección de rutas por roles (cliente/admin)
+- Landing page responsive con diseño moderno
+- Dashboard para clientes y administradores
+- Diseño mobile-first con colores cálidos
 
-## Expanding the ESLint configuration
+## Stack Tecnológico
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend**: React 18 + Vite
+- **Estilos**: CSS puro con variables personalizadas
+- **Autenticación**: Supabase Auth
+- **Base de datos**: Supabase PostgreSQL
+- **Iconos**: Lucide React
+- **Router**: React Router DOM
+
+## Instalación
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/juanjoal25/Veterinaria_domicilios.git
+   cd frontend
+   cd pet-home
+   ```
+
+2. **Instalar dependencias**
+   ```bash
+   npm install
+   ```
+
+3. **Configurar variables de entorno**
+   ```bash
+   # Crear archivo .env en la raíz del proyecto
+   VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+   VITE_SUPABASE_ANON_KEY=tu_clave_anonima_publica
+   ```
+
+4. **Configurar base de datos**
+   - Ejecutar las queries SQL del archivo `supabase-rls-policies.sql` en el SQL Editor de Supabase
+   - Esto configurará las tablas, políticas RLS y datos iniciales
+
+5. **Ejecutar en desarrollo**
+   ```bash
+   npm run dev
+   ```
+
+## Rutas
+
+| Ruta | Descripción | Acceso |
+|------|-------------|---------|
+| `/` | Landing page | Público |
+| `/login` | Inicio de sesión | Público |
+| `/register` | Registro | Público |
+| `/dashboard` | Dashboard cliente | Solo clientes |
+| `/admin` | Dashboard admin | Solo administradores |
+
+## Autenticación
+
+El sistema maneja dos roles:
+
+- **client**: Usuarios que pueden agendar citas y gestionar sus mascotas
+- **admin**: Administradores con acceso completo al sistema
+
+### Registro de usuarios
+- Los nuevos usuarios se registran automáticamente como 'client'
+- Requiere confirmación por email
+- Validación de contraseñas seguras
+
+### Protección de datos
+- Row Level Security (RLS) habilitada
+- Los clientes solo ven sus propios datos
+- Los administradores tienen acceso completo
+
+## Scripts Disponibles
+
+```bash
+npm run dev          # Servidor de desarrollo
+npm run build        # Build para producción
+```
+
+## Paleta de Colores
+```css
+--color-base: #F5EDE3      /* Fondo principal */
+--color-primary: #ED7959   /* Color primario */
+--color-secondary: #FFD8C2 /* Color secundario */
+--color-text: #2F2F2F      /* Texto principal */
+```
