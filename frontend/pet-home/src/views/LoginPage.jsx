@@ -1,6 +1,6 @@
 // src/pages/LoginPage.jsx
 // Importamos los hooks y componentes necesarios de React
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import AuthProvider from "../context/AuthContext";
 import { useAuth } from "../context/AuthContext";
@@ -17,12 +17,29 @@ import PetHomeLogo from '/PetHomeLogo.svg';
 // Componente para la página de inicio de sesión
 const LoginPage = () => {
     const navigate = useNavigate();
-    const { user, login, loading: authLoading } = useAuth();
+    const { login, loading: authLoading, user } = useAuth();
     // Estado para manejar los datos del formulario
     const [formData, setFormData] = useState({ email: '', password: '' });
     // Estado para manejar mensajes de error y el estado de carga
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    // Redirigir si el usuario ya está autenticado
+    useEffect(() => {
+        if (user && !authLoading) {
+            console.log('Usuario autenticado detectado, redirigiendo...', user);
+            if (user.role === 'admin') {
+                console.log('Usuario es admin, redirigiendo a /admin');
+                navigate("/admin", { replace: true });
+            } else if (user.role === 'client') {
+                console.log('Usuario es cliente, redirigiendo a /dashboard');
+                navigate("/dashboard", { replace: true });
+            } else {
+                console.log('Rol desconocido, redirigiendo a /dashboard por defecto');
+                navigate("/dashboard", { replace: true });
+            }
+        }
+    }, [user, authLoading, navigate]);
 
     // Función que maneja el envío del formulario
     const handleSubmit = async (e) => {
@@ -59,18 +76,9 @@ const LoginPage = () => {
 
             if (result.success) {
                 console.log('Login exitoso, redirigiendo...');
-                // Lógica de redirección basada en el rol
-                if (user.role == 'admin') {
-                    console.log('Usuario es admin, redirigiendo a /admin');
-                    navigate("/admin", { replace: true });
-                } else if (user.role == 'client') {
-                    console.log('Usuario es cliente, redirigiendo a /dashboard');
-                    navigate("/dashboard", { replace: true });
-                } else {
-                    // Manejar un rol desconocido
-                    console.log('Rol desconocido, redirigiendo a / por defecto');
-                    navigate("/", { replace: true });
-                }
+                // Redirigir al dashboard por defecto
+                // La redirección basada en roles se manejará en el useEffect
+                navigate("/dashboard", { replace: true });
             } else {
                 console.log('Login falló:', result.error);
                 // Manejar errores específicos de Supabase
