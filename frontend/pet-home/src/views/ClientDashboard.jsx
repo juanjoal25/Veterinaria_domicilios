@@ -21,19 +21,21 @@ const ClientDashboard = () => {
     navigate("/");
   };
 
+
+
   // Cargar mascotas del usuario
   const loadPets = async () => {
     try {
       const { data, error } = await supabase
         .from('pets')
         .select('*')
-        .eq('owner_id', user?.id);
-      
+        .eq('user_id', user?.id);
+
       if (error) {
         console.error('Error cargando mascotas:', error);
         return;
       }
-      
+
       setPets(data || []);
     } catch (error) {
       console.error('Error en loadPets:', error);
@@ -50,12 +52,12 @@ const ClientDashboard = () => {
           pets(name, species)
         `)
         .in('pet_id', pets.map(pet => pet.id));
-      
+
       if (error) {
         console.error('Error cargando exámenes:', error);
         return;
       }
-      
+
       setExams(data || []);
     } catch (error) {
       console.error('Error en loadExams:', error);
@@ -100,8 +102,12 @@ const ClientDashboard = () => {
         const { data, error } = await supabase
           .from('appointments')
           .insert([{
-            ...formData,
-            client_id: user.id,
+            user_id: user.id,
+            pet_id: formData.pet_id,
+            service_id: 1, // puedes poner un ID fijo o permitir selección
+            scheduled_at: new Date(`${formData.appointment_date}T${formData.appointment_time}:00`),
+            notes: formData.reason,
+            status: 'scheduled',
             created_at: new Date().toISOString()
           }]);
 
@@ -124,10 +130,10 @@ const ClientDashboard = () => {
           <label className="form-label">
             Seleccionar Mascota *
           </label>
-          <select 
+          <select
             required
             value={formData.pet_id}
-            onChange={(e) => setFormData({...formData, pet_id: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, pet_id: e.target.value })}
             className="form-input"
           >
             <option value="">Selecciona una mascota</option>
@@ -138,14 +144,14 @@ const ClientDashboard = () => {
             ))}
           </select>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Tipo de Consulta
           </label>
-          <select 
+          <select
             value={formData.appointment_type}
-            onChange={(e) => setFormData({...formData, appointment_type: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, appointment_type: e.target.value })}
             className="form-input"
           >
             <option>Consulta General</option>
@@ -155,28 +161,28 @@ const ClientDashboard = () => {
             <option>Cirugía</option>
           </select>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Fecha Preferida *
           </label>
-          <input 
-            type="date" 
+          <input
+            type="date"
             required
             value={formData.appointment_date}
-            onChange={(e) => setFormData({...formData, appointment_date: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, appointment_date: e.target.value })}
             min={new Date().toISOString().split('T')[0]}
             className="form-input"
           />
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Hora Preferida
           </label>
-          <select 
+          <select
             value={formData.appointment_time}
-            onChange={(e) => setFormData({...formData, appointment_time: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, appointment_time: e.target.value })}
             className="form-input"
           >
             <option>09:00</option>
@@ -187,29 +193,29 @@ const ClientDashboard = () => {
             <option>16:00</option>
           </select>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Motivo de la Consulta
           </label>
-          <textarea 
+          <textarea
             value={formData.reason}
-            onChange={(e) => setFormData({...formData, reason: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
             className="form-input form-textarea"
             rows="3"
             placeholder="Describe brevemente el motivo de la consulta..."
           />
         </div>
-        
+
         <div className="form-buttons">
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="form-btn form-btn-secondary"
           >
             Cancelar
           </button>
-          <button 
+          <button
             type="submit"
             disabled={loading}
             className="form-btn form-btn-primary"
@@ -243,7 +249,7 @@ const ClientDashboard = () => {
           .from('pets')
           .insert([{
             ...formData,
-            owner_id: user.id,
+            user_id: user.id,
             created_at: new Date().toISOString()
           }]);
 
@@ -267,25 +273,25 @@ const ClientDashboard = () => {
           <label className="form-label">
             Nombre de la Mascota *
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             required
             value={formData.name}
-            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="form-input"
             placeholder="Ej: Max, Luna, etc."
           />
         </div>
-        
+
         <div className="form-row">
           <div className="form-group">
             <label className="form-label">
               Especie *
             </label>
-            <select 
+            <select
               required
               value={formData.species}
-              onChange={(e) => setFormData({...formData, species: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, species: e.target.value })}
               className="form-input"
             >
               <option>Perro</option>
@@ -295,14 +301,14 @@ const ClientDashboard = () => {
               <option>Otro</option>
             </select>
           </div>
-          
+
           <div className="form-group">
             <label className="form-label">
               Género
             </label>
-            <select 
+            <select
               value={formData.gender}
-              onChange={(e) => setFormData({...formData, gender: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
               className="form-input"
             >
               <option>Macho</option>
@@ -310,87 +316,87 @@ const ClientDashboard = () => {
             </select>
           </div>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Raza
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={formData.breed}
-            onChange={(e) => setFormData({...formData, breed: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, breed: e.target.value })}
             className="form-input"
             placeholder="Ej: Pastor Alemán, Persa, etc."
           />
         </div>
-        
+
         <div className="form-row">
           <div className="form-group">
             <label className="form-label">
               Edad (años)
             </label>
-            <input 
-              type="number" 
+            <input
+              type="number"
               min="0"
               max="30"
               value={formData.age}
-              onChange={(e) => setFormData({...formData, age: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, age: e.target.value })}
               className="form-input"
               placeholder="Ej: 3"
             />
           </div>
-          
+
           <div className="form-group">
             <label className="form-label">
               Peso (kg)
             </label>
-            <input 
-              type="number" 
+            <input
+              type="number"
               min="0"
               step="0.1"
               value={formData.weight}
-              onChange={(e) => setFormData({...formData, weight: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
               className="form-input"
               placeholder="Ej: 25.5"
             />
           </div>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Color
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={formData.color}
-            onChange={(e) => setFormData({...formData, color: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, color: e.target.value })}
             className="form-input"
             placeholder="Ej: Marrón, Blanco, Negro, etc."
           />
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Notas Médicas
           </label>
-          <textarea 
+          <textarea
             value={formData.medical_notes}
-            onChange={(e) => setFormData({...formData, medical_notes: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, medical_notes: e.target.value })}
             className="form-input form-textarea"
             rows="3"
             placeholder="Alergias, medicamentos, condiciones especiales..."
           />
         </div>
-        
+
         <div className="form-buttons">
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="form-btn form-btn-secondary"
           >
             Cancelar
           </button>
-          <button 
+          <button
             type="submit"
             disabled={loading}
             className="form-btn form-btn-primary"
@@ -404,13 +410,13 @@ const ClientDashboard = () => {
 
   const Modal = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null;
-    
+
     return (
       <div className="modal-overlay">
         <div className="modal-container">
           <div className="modal-header">
             <h2 className="modal-title">{title}</h2>
-            <button 
+            <button
               onClick={onClose}
               className="modal-close-btn"
             >
@@ -424,7 +430,7 @@ const ClientDashboard = () => {
       </div>
     );
   };
-  
+
   return (
     <div className="dashboard-container">
       {/* Header */}
@@ -440,13 +446,13 @@ const ClientDashboard = () => {
           <div className="user-menu">
             <div className="user-avatar">
               {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
-              </div>
-        <button
-                onClick={handleLogout}
+            </div>
+            <button
+              onClick={handleLogout}
               className="logout-btn"
-        >
-          Cerrar Sesión
-        </button>
+            >
+              Cerrar Sesión
+            </button>
           </div>
         </div>
       </header>
@@ -514,15 +520,15 @@ const ClientDashboard = () => {
             <div className="stat-item">
               <div className="stat-number">{pets.length}</div>
               <div className="stat-label">Mascotas Registradas</div>
-        </div>
+            </div>
             <div className="stat-item">
               <div className="stat-number">0</div>
               <div className="stat-label">Citas Próximas</div>
-              </div>
+            </div>
             <div className="stat-item">
               <div className="stat-number">{exams.length}</div>
               <div className="stat-label">Exámenes Pendientes</div>
-              </div>
+            </div>
             <div className="stat-item">
               <div className="stat-number">1</div>
               <div className="stat-label">Años con PetH</div>
@@ -538,8 +544,8 @@ const ClientDashboard = () => {
             <div className="activity-content">
               <h4>Última cita agendada</h4>
               <p>Consulta general - Sistema de citas disponible</p>
-              </div>
-              </div>
+            </div>
+          </div>
           <div className="activity-item">
             <div className="activity-icon">🔬</div>
             <div className="activity-content">
@@ -563,7 +569,7 @@ const ClientDashboard = () => {
         onClose={() => setShowAppointmentModal(false)}
         title="Agendar Nueva Cita"
       >
-        <AppointmentForm 
+        <AppointmentForm
           pets={pets}
           onClose={() => setShowAppointmentModal(false)}
           onSuccess={(message) => {
@@ -592,7 +598,7 @@ const ClientDashboard = () => {
               {exams.map((exam, index) => (
                 <div key={index} className="bg-gray-50 p-4 rounded-lg border">
                   <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-medium text-gray-800">{exam.exam_type}</h4>
+                    <h4 className="font-medium text-gray-800">{exam.type}</h4>
                     <span className="text-sm text-gray-500">
                       {new Date(exam.exam_date).toLocaleDateString()}
                     </span>
@@ -600,11 +606,7 @@ const ClientDashboard = () => {
                   <p className="text-sm text-gray-600 mb-2">
                     <strong>Mascota:</strong> {exam.pets?.name} ({exam.pets?.species})
                   </p>
-                  {exam.results && (
-                    <p className="text-sm text-gray-600 mb-2">
-                      <strong>Resultados:</strong> {exam.results}
-                    </p>
-                  )}
+                  {exam.result_url && <a href={exam.result_url} target="_blank">Ver Resultados</a>}
                   {exam.notes && (
                     <p className="text-sm text-gray-600">
                       <strong>Notas:</strong> {exam.notes}
@@ -614,9 +616,9 @@ const ClientDashboard = () => {
               ))}
             </div>
           )}
-          
+
           <div className="flex justify-end pt-4">
-            <button 
+            <button
               onClick={() => setShowExamModal(false)}
               className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200"
             >
@@ -631,7 +633,7 @@ const ClientDashboard = () => {
         onClose={() => setShowPetModal(false)}
         title="Registrar Nueva Mascota"
       >
-        <PetForm 
+        <PetForm
           onClose={() => setShowPetModal(false)}
           onSuccess={(message) => {
             showMessage('success', message);
@@ -652,7 +654,7 @@ const ClientDashboard = () => {
               <div className="text-6xl mb-4">🐕</div>
               <h3 className="text-lg font-semibold text-gray-700 mb-2">No tienes mascotas registradas</h3>
               <p className="text-gray-500 mb-4">Registra tu primera mascota para comenzar a usar el sistema.</p>
-              <button 
+              <button
                 onClick={() => {
                   setShowHistoryModal(false);
                   setShowPetModal(true);
@@ -692,9 +694,9 @@ const ClientDashboard = () => {
               ))}
             </div>
           )}
-          
+
           <div className="flex justify-end pt-4">
-            <button 
+            <button
               onClick={() => setShowHistoryModal(false)}
               className="bg-purple-500 text-white px-6 py-2 rounded-lg hover:bg-purple-600 transition-colors duration-200"
             >
@@ -714,54 +716,54 @@ const ClientDashboard = () => {
             <label className="form-label">
               Nombre Completo
             </label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               defaultValue={user?.name}
               className="form-input"
             />
           </div>
-          
+
           <div className="form-group">
             <label className="form-label">
               Email
             </label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               defaultValue={user?.email}
               className="form-input"
             />
           </div>
-          
+
           <div className="form-group">
             <label className="form-label">
               Teléfono
             </label>
-            <input 
-              type="tel" 
+            <input
+              type="tel"
               defaultValue={user?.phone}
               className="form-input"
             />
           </div>
-          
+
           <div className="form-group">
             <label className="form-label">
               Dirección
             </label>
-            <textarea 
+            <textarea
               className="form-input form-textarea"
               rows="3"
               placeholder="Ingresa tu dirección completa..."
             />
           </div>
-          
+
           <div className="form-buttons">
-            <button 
+            <button
               onClick={() => setShowProfileModal(false)}
               className="form-btn form-btn-secondary"
             >
               Cancelar
             </button>
-            <button 
+            <button
               onClick={() => setShowProfileModal(false)}
               className="form-btn form-btn-primary"
             >

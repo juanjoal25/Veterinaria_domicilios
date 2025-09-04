@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import AuthProvider from "../context/AuthContext";
 import { useAuth } from "../context/AuthContext";
+
 // Importamos los íconos necesarios de lucide-react
 import { AlertCircle } from 'lucide-react';
 
@@ -16,7 +17,7 @@ import PetHomeLogo from '/PetHomeLogo.svg';
 // Componente para la página de inicio de sesión
 const LoginPage = () => {
     const navigate = useNavigate();
-    const { login, loading: authLoading } = useAuth();
+    const { user, login, loading: authLoading } = useAuth();
     // Estado para manejar los datos del formulario
     const [formData, setFormData] = useState({ email: '', password: '' });
     // Estado para manejar mensajes de error y el estado de carga
@@ -55,16 +56,26 @@ const LoginPage = () => {
             console.log('Iniciando proceso de login...');
             const result = await login(formData.email.trim(), formData.password);
             console.log('Resultado del login:', result);
-            
+
             if (result.success) {
                 console.log('Login exitoso, redirigiendo...');
-                // Redirigir al dashboard si el inicio de sesión es exitoso
-                navigate("/dashboard", { replace: true });
+                // Lógica de redirección basada en el rol
+                if (user.role == 'admin') {
+                    console.log('Usuario es admin, redirigiendo a /admin');
+                    navigate("/admin", { replace: true });
+                } else if (user.role == 'client') {
+                    console.log('Usuario es cliente, redirigiendo a /dashboard');
+                    navigate("/dashboard", { replace: true });
+                } else {
+                    // Manejar un rol desconocido
+                    console.log('Rol desconocido, redirigiendo a / por defecto');
+                    navigate("/", { replace: true });
+                }
             } else {
                 console.log('Login falló:', result.error);
                 // Manejar errores específicos de Supabase
                 let errorMessage = 'Error al iniciar sesión. Verifica tus credenciales.';
-                
+
                 if (result.error) {
                     if (result.error.includes('Invalid login credentials')) {
                         errorMessage = 'Email o contraseña incorrectos';
@@ -76,7 +87,7 @@ const LoginPage = () => {
                         errorMessage = result.error;
                     }
                 }
-                
+
                 setError(errorMessage);
             }
         } catch (err) {
@@ -84,7 +95,6 @@ const LoginPage = () => {
             setError('Error inesperado. Por favor intenta nuevamente.');
         } finally {
             console.log('Finalizando proceso de login, reseteando loading...');
-            clearTimeout(timeoutId);
             setLoading(false);
         }
     };
